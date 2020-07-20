@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script>
+		window.addEventListener("load", function(){
+			var canvas = document.getElementById("canvas");
+			var ctx = canvas.getContext("2d");
+
+			const BLOCK_SIZE = 4;
+
+			const NORTH = 0;
+			const SOUTH = 1;
+			const EAST = 2;
+			const WEST = 3;
+
+			var grid = [];
+
+			console.log(canvas.width/BLOCK_SIZE);
+
+			//randomize the board
+			for(var i=0; i < canvas.width/BLOCK_SIZE; i++){
+				for(var j=0; j < canvas.height/BLOCK_SIZE; j++){
+					grid[i*canvas.width/BLOCK_SIZE+j] = 0;
+					//if(j % 2 === 0)
+						//grid[i*canvas.width/BLOCK_SIZE+j] = coinFlip();
+					//else
+					//	grid[i*canvas.width/BLOCK_SIZE+j] = 0;
+				}
+			}
+
+
+			//position the ant
+			ants = [];
+			var NUM_ANTS = 10;
+			for(var i=0; i < NUM_ANTS; i++){
+				ants[i] = { x : randomInt(0, canvas.width/BLOCK_SIZE),
+					    y : randomInt(0, canvas.height/BLOCK_SIZE),
+					    facing : randomInt(NORTH,WEST) };
+			}
+			/*ant = { x : canvas.width/2/BLOCK_SIZE,//randomInt(0, canvas.width/BLOCK_SIZE), 
+	 			y : canvas.height/2/BLOCK_SIZE,//randomInt(0, canvas.height/BLOCK_SIZE),
+				facing : randomInt(NORTH,WEST) };*/
+
+
+			setInterval(function(){
+				//move the ants
+				for(var i=0; i < NUM_ANTS; i++){
+					var ant = ants[i];
+					if(grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] === 0){//black square
+						console.log("black");
+						grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] = 1;
+						switch(ant.facing){
+							case NORTH:
+								ant.facing = WEST;
+								ant.x--;
+								break;
+							case SOUTH:
+								ant.facing = EAST;
+								ant.x++;
+								break;
+							case EAST:
+								ant.facing = NORTH;
+								ant.y--;
+								break;
+							case WEST:
+								ant.facing = SOUTH;
+								ant.y++;
+								break;
+						}
+						
+					}else{//white square
+						console.log("white");
+						grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] = 0;
+						switch(ant.facing){
+							case NORTH:
+								ant.facing = EAST;
+								ant.x++;
+								break;
+							case SOUTH:
+								ant.facing = WEST;
+								ant.x--;
+								break;
+							case EAST:
+								ant.facing = SOUTH;
+								ant.y++;
+								break;
+							case WEST:
+								ant.facing = NORTH;
+								ant.y--;
+								break;
+						}
+						
+					}
+					ants[i] = ant; //not sure if JS copies by value or reference but this will make it not matter
+				}
+
+				//draw the grid
+				for(var i=0; i < canvas.width/BLOCK_SIZE; i++){
+					for(var j=0; j < canvas.height/BLOCK_SIZE; j++){
+						ctx.fillStyle = grid[i*canvas.width/BLOCK_SIZE+j] === 1 ? "#FFF" : "#000";
+						ctx.fillRect(i*BLOCK_SIZE, j*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+					}
+				}
+
+
+				//draw the ant
+				for(var i=0; i < NUM_ANTS; i++){
+					var ant = ants[i];
+					ctx.fillStyle = "#F00";
+					ctx.fillRect(ant.x*BLOCK_SIZE, ant.y*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+				}
+
+				console.log(ant);
+			}, 1);
+
+			function coinFlip(){
+				return Math.random() >= 0.5 ? 1 : 0;
+			}
+
+			function randomInt(min, max){
+				return Math.floor( ((Math.random() * max) + 1) - min);
+			}
+		});
+	</script>
+</head>
+<body>
+<center>
+	<canvas height=800 width=1000 id="canvas"></canvas>
+</center>
+</body>
+</html?
