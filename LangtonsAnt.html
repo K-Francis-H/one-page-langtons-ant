@@ -46,6 +46,7 @@
 				//move the ants
 				for(var i=0; i < NUM_ANTS; i++){
 					var ant = ants[i];
+					//TODO wraparound f x,y becomes out of bounds
 					if(grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] === 0){//black square
 						console.log("black");
 						grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] = 1;
@@ -128,4 +129,4 @@
 	<canvas height=800 width=1000 id="canvas"></canvas>
 </center>
 </body>
-</html?
+</html>
