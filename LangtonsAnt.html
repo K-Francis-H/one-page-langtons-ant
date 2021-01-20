@@ -31,19 +31,18 @@
 
 			//position the ant
 			ants = [];
-			var NUM_ANTS = 10;
+			var NUM_ANTS = 2;
 			for(var i=0; i < NUM_ANTS; i++){
 				ants[i] = { x : randomInt(0, canvas.width/BLOCK_SIZE),
 					    y : randomInt(0, canvas.height/BLOCK_SIZE),
 					    facing : randomInt(NORTH,WEST) };
 			}
-			/*ant = { x : canvas.width/2/BLOCK_SIZE,//randomInt(0, canvas.width/BLOCK_SIZE), 
-	 			y : canvas.height/2/BLOCK_SIZE,//randomInt(0, canvas.height/BLOCK_SIZE),
-				facing : randomInt(NORTH,WEST) };*/
 
 
 			setInterval(function(){
 				//move the ants
+				const W = canvas.width/BLOCK_SIZE;
+				const H = canvas.height/BLOCK_SIZE;
 				for(var i=0; i < NUM_ANTS; i++){
 					var ant = ants[i];
 					//TODO wraparound f x,y becomes out of bounds
@@ -52,20 +51,36 @@
 						grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] = 1;
 						switch(ant.facing){
 							case NORTH:
+								console.log("north->west");
 								ant.facing = WEST;
-								ant.x--;
+								if(ant.x-1 >= 0)
+									ant.x--;
+								else
+									ant.x = canvas.width/BLOCK_SIZE-1;
 								break;
 							case SOUTH:
+								console.log("south->east");
 								ant.facing = EAST;
-								ant.x++;
+								if(ant.x+1 < canvas.width/BLOCK_SIZE)
+									ant.x++;
+								else
+									ant.x=0;
 								break;
 							case EAST:
+								console.log("east->north");
 								ant.facing = NORTH;
-								ant.y--;
+								if(ant.y-1 >= 0)
+									ant.y--;
+								else
+									ant.y=canvas.height/BLOCK_SIZE-1;
 								break;
 							case WEST:
+								console.log("west->south");
 								ant.facing = SOUTH;
-								ant.y++;
+								if(ant.y+1 < canvas.height/BLOCK_SIZE)
+									ant.y++;
+								else
+									ant.y=0;
 								break;
 						}
 						
@@ -74,20 +89,36 @@
 						grid[ant.x*(canvas.width/BLOCK_SIZE) + ant.y] = 0;
 						switch(ant.facing){
 							case NORTH:
+								console.log("north->east");
 								ant.facing = EAST;
-								ant.x++;
+								if(ant.x+1 < canvas.width/BLOCK_SIZE)
+									ant.x++;
+								else
+									ant.x=0;
 								break;
 							case SOUTH:
+								console.log("south->west");
 								ant.facing = WEST;
-								ant.x--;
+								if(ant.x-1 >= 0)
+									ant.x--;
+								else
+									ant.x = canvas.width/BLOCK_SIZE-1;
 								break;
 							case EAST:
+								console.log("east->south");
 								ant.facing = SOUTH;
-								ant.y++;
+								if(ant.y+1 < canvas.height/BLOCK_SIZE)
+									ant.y++;
+								else
+									ant.y=0;
 								break;
 							case WEST:
+								console.log("west->north");
 								ant.facing = NORTH;
-								ant.y--;
+								if(ant.y-1 >= 0)
+									ant.y--;
+								else
+									ant.y = canvas.height/BLOCK_SIZE-1;
 								break;
 						}
 						
@@ -98,6 +129,7 @@
 				//draw the grid
 				for(var i=0; i < canvas.width/BLOCK_SIZE; i++){
 					for(var j=0; j < canvas.height/BLOCK_SIZE; j++){
+						//console.log("i: "+i+" j: "+j+" "+grid[i*canvas.width/BLOCK_SIZE+j]);
 						ctx.fillStyle = grid[i*canvas.width/BLOCK_SIZE+j] === 1 ? "#FFF" : "#000";
 						ctx.fillRect(i*BLOCK_SIZE, j*BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 					}
@@ -112,7 +144,7 @@
 				}
 
 				console.log(ant);
-			}, 1);
+			}, 100);
 
 			function coinFlip(){
 				return Math.random() >= 0.5 ? 1 : 0;
